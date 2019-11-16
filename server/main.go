@@ -1,13 +1,24 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"github.com/TheScenery/BoltAdmin/boltadmin"
+)
+
+type MyDBManager struct {
+	allDBs []string
+}
+
+func (manager MyDBManager) GetAllDBs() *[]string {
+	return &manager.allDBs
+}
 
 func main() {
-	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	router.Run(":10113") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	myDBManager := MyDBManager{
+		allDBs: []string{"aaa"},
+	}
+	err := boltadmin.Start(myDBManager)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
