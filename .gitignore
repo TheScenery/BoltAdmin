@@ -62,3 +62,6 @@ typings/
 
 # vscode settings
 .vscode
+
+# go debug file
+server/debug
