@@ -1,9 +1,14 @@
 package boltadmin
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	bolt "go.etcd.io/bbolt"
+)
 
 type DBManager interface {
 	GetAllDBs() *[]string
+	OpenDB(dbName string) (*bolt.DB, error)
+	CloseDB(dbName string, db *bolt.DB)
 }
 
 func Start(dbManager DBManager) error {

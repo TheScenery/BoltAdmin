@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/TheScenery/BoltAdmin/boltadmin"
 
-	bolt "go.etcd.io/bbolt"
 	"io/ioutil"
 	"path/filepath"
+
+	bolt "go.etcd.io/bbolt"
 )
 
 type MyDBManager struct {
@@ -15,6 +17,14 @@ type MyDBManager struct {
 
 func (manager MyDBManager) GetAllDBs() *[]string {
 	return &manager.allDBs
+}
+
+func (manager MyDBManager) OpenDB(name string) (*bolt.DB, error) {
+	return bolt.Open(filepath.Join("./data", name), 0600, nil)
+}
+
+func (manager MyDBManager) CloseDB(name string, db *bolt.DB) {
+	db.Close()
 }
 
 func getAllDbs(dir string) (*[]string, error) {
@@ -33,18 +43,33 @@ func getAllDbs(dir string) (*[]string, error) {
 	return &dbFiles, err
 }
 
-func main() {
-
-	db, err := bolt.Open("./data/db1.db", 0600, nil)
+func initTestDb() {
+	db, err := bolt.Open("./data/test.db", 0600, nil)
 	if err != nil {
-		fmt.Println(err)
+		return
 	}
-	defer db.Close()
+	db.Update(func(tx *bolt.Tx) error {
+		// Retrieve the users bucket.
+		// This should be created when the DB is first opened.
+		b, _ := tx.CreateBucketIfNotExists([]byte("users"))
+		return b.Put([]byte("qwer"), []byte("4567"))
+	})
 
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("users"))
+		v := b.Get([]byte("qwer"))
+		fmt.Printf("The qwer is: %s\n", v)
+		return nil
+	})
+}
+
+func main() {
 	allDbs, err := getAllDbs("./data")
 	if err != nil {
 		return
 	}
+
+	initTestDb()
 
 	myDBManager := MyDBManager{
 		allDBs: *allDbs,
