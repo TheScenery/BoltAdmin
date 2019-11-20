@@ -64,4 +64,6 @@ typings/
 .vscode
 
 # go debug file
-server/debug
+testProject/debug
+
+.Ds_store
