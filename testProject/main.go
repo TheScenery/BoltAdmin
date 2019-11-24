@@ -45,6 +45,7 @@ func getAllDbs(dir string) (*[]string, error) {
 
 func initTestDb() {
 	db, err := bolt.Open("./data/test.db", 0600, nil)
+	defer db.Close()
 	if err != nil {
 		return
 	}
@@ -52,6 +53,11 @@ func initTestDb() {
 		// Retrieve the users bucket.
 		// This should be created when the DB is first opened.
 		b, _ := tx.CreateBucketIfNotExists([]byte("users"))
+		b, _ = tx.CreateBucketIfNotExists([]byte("rows"))
+		b, _ = tx.CreateBucketIfNotExists([]byte("columns"))
+		b, _ = tx.CreateBucketIfNotExists([]byte("nodes"))
+		b, _ = tx.CreateBucketIfNotExists([]byte("photos"))
+		b, _ = tx.CreateBucketIfNotExists([]byte("others"))
 		return b.Put([]byte("qwer"), []byte("4567"))
 	})
 

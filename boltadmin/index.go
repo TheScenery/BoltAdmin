@@ -23,6 +23,15 @@ func Start(dbManager DBManager) error {
 			"dbs": dbManager.GetAllDBs(),
 		})
 	})
+	router.GET("/allbuckets", func (c *gin.Context)  {
+		db, err := dbManager.OpenDB("test.db")
+		if err == nil {
+			c.JSON(200, gin.H{
+				"buckets": getAllBuckets(db),
+			})
+		}
+		
+	})
 	router.Run(":10113") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	return nil
 }
