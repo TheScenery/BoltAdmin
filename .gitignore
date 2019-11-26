@@ -67,3 +67,6 @@ typings/
 testProject/debug
 
 .Ds_store
+
+# db file
+testProject/data

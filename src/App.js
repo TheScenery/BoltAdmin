@@ -1,8 +1,12 @@
 import React from 'react';
 import logo from './gopher.png';
 import './App.css';
+import { getAllDB } from './request/api';
 
 function App() {
+  // test api proxy
+  getAllDB().then(result => console.log(result));
+  
   return (
     <div className="App">
       <header className="App-header">
