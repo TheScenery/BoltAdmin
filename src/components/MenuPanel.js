@@ -1,31 +1,37 @@
-import React from 'react';
-import { Menu, Icon } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Menu, Icon, Spin } from 'antd';
+import { getAllDB } from '../request/api.js'
 import './MenuPanel.scss';
 
-const { SubMenu } = Menu;
-
 const MenuPanel = () => {
+    const [loaded, updateLoadStatus] = useState(false);
+    const [dbs = [], updateAddDBs] = useState([]);
+
+    useEffect(() => {
+        if (!loaded) {
+            getAllDB().then((result) => {
+                console.log(result);
+                updateLoadStatus(true);
+                updateAddDBs(result && result.data && result.data.dbs);
+            });
+        }
+    });
+
     return (
         <div className="menu-panel-container">
-            <Menu
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
-                mode="inline"
-                theme="dark"
-            >
-                <Menu.Item key="1">
-                    <Icon type="cloud-server" />
-                    <span>Bolt 1</span>
-                </Menu.Item>
-                <Menu.Item key="2">
-                    <Icon type="cloud-server" />
-                    <span>Bolt 2</span>
-                </Menu.Item>
-                <Menu.Item key="3">
-                    <Icon type="cloud-server" />
-                    <span>Bolt 3</span>
-                </Menu.Item>
-            </Menu>
+            <Spin spinning={!loaded}>
+                <Menu
+                    mode="inline"
+                    theme="dark"
+                >
+                    {dbs.map((db, index) => (
+                        <Menu.Item key={index}>
+                            <Icon type="cloud-server" />
+                            <span>{db}</span>
+                        </Menu.Item>
+                    ))}
+                </Menu>
+            </Spin>
         </div>
     );
 }
