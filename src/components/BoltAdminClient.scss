@@ -1,3 +1,12 @@
 .boltadmin-client-container {
     height: 100%;
+    display: flex;
+
+    .menu-panel-container {
+        flex: 0 0 auto;
+    }
+
+    .db-detail-container {
+        flex: 1 1 auto;
+    }
 }

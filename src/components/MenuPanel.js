@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, Icon, Spin } from 'antd';
+import PropTypes from 'prop-types';
 import { getAllDB } from '../request/api.js'
 import './MenuPanel.scss';
 
-const MenuPanel = () => {
+const MenuPanel = (props) => {
+    const { onSelectDB } = props;
     const [loaded, updateLoadStatus] = useState(false);
     const [dbs = [], updateAddDBs] = useState([]);
 
@@ -23,6 +25,12 @@ const MenuPanel = () => {
                 <Menu
                     mode="inline"
                     theme="dark"
+                    onSelect={({ key }) => {
+                        console.log(dbs, key);
+                        if (onSelectDB) {
+                            onSelectDB(dbs[key])
+                        }
+                    }}
                 >
                     {dbs.map((db, index) => (
                         <Menu.Item key={index}>
@@ -36,5 +44,8 @@ const MenuPanel = () => {
     );
 }
 
+MenuPanel.propTypes = {
+    onSelectDB: PropTypes.func,
+}
 
 export default MenuPanel;
