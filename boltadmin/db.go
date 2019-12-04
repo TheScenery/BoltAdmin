@@ -6,7 +6,7 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
-func getAllBuckets(db *bolt.DB) []string {
+func getKeys(db *bolt.DB, keys []string) (interface{}, error) {
 	buckets := make([]string, 0)
 	db.View(func(tx *bolt.Tx) error {
 		c := tx.Cursor()
@@ -18,5 +18,5 @@ func getAllBuckets(db *bolt.DB) []string {
 
 		return nil
 	})
-	return buckets
+	return buckets, nil
 }
