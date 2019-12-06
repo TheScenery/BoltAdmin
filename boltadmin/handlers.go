@@ -9,10 +9,9 @@ type handlerWrapper struct {
 	dbManager DBManager
 }
 
-type formData struct {
-	DBName string   `json:"dbName"`
-	Keys   []string `json:"keys"`
-	Value  string   `json:"value"`
+type requestData struct {
+	Keys  []string `json:"keys"`
+	Value string   `json:"value"`
 }
 
 func (wrapper *handlerWrapper) getAllDbs(c *gin.Context) {
@@ -23,10 +22,12 @@ func (wrapper *handlerWrapper) getAllDbs(c *gin.Context) {
 }
 
 func (wrapper *handlerWrapper) getKeys(c *gin.Context) {
-	var requestOptions formData
+	var requestOptions requestData
 	if c.BindJSON(&requestOptions) == nil {
 		dbManager := wrapper.dbManager
-		db, err := dbManager.OpenDB(requestOptions.DBName)
+		dbName := c.Param("db")
+		db, err := dbManager.OpenDB(dbName)
+		defer dbManager.CloseDB(dbName, db)
 		if err != nil {
 			c.String(http.StatusBadRequest, "db name required")
 			return
