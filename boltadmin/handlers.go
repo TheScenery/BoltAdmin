@@ -40,7 +40,7 @@ func (wrapper *handlerWrapper) getKeys(c *gin.Context) {
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"reqult": result,
+			"result": result,
 		})
 	}
 }
