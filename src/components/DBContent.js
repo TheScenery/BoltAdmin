@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { Tree } from 'antd';
 import './DBContent.scss';
+import { getKeys } from '../request/api.js';
 
 const { TreeNode } = Tree;
 
@@ -36,11 +38,20 @@ const renderTreeNodes = data =>
 
 const DBContent = (props) => {
     const { dbName } = props;
-    const [treeData, updateTreeData] = useState([
-        { title: 'Expand to load', key: '0' },
-        { title: 'Expand to load', key: '1' },
-        { title: 'Tree Node', key: '2', isLeaf: true },
-    ]);
+    const [treeData, updateTreeData] = useState([]);
+    const [loaded, loadedData] = useState(false);
+    useEffect(() => {
+        if (!loaded && dbName) {
+            getKeys(dbName, []).then((result) => {
+                const dbData = _.get(result, 'data.result');
+                updateTreeData(dbData.map((d, index) => ({ title: d.value, key: index, isLeaf: !d.isBucket })))
+            }).catch((error) => {
+                console.log(error);
+            }).finally(() => {
+                loadedData(true);
+            })
+        }
+    })
     return (
         <div className="db-content">
             <Tree loadData={(treeNode) => onLoadData(treeNode, treeData, updateTreeData)}>

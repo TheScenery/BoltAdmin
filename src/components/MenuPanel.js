@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, Icon, Spin } from 'antd';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { getAllDB } from '../request/api.js'
 import './MenuPanel.scss';
@@ -12,9 +13,8 @@ const MenuPanel = (props) => {
     useEffect(() => {
         if (!loaded) {
             getAllDB().then((result) => {
-                console.log(result);
                 updateLoadStatus(true);
-                updateAddDBs(result && result.data && result.data.dbs);
+                updateAddDBs(_.get(result, 'data.dbs', []));
             });
         }
     });
@@ -26,7 +26,6 @@ const MenuPanel = (props) => {
                     mode="inline"
                     theme="dark"
                     onSelect={({ key }) => {
-                        console.log(dbs, key);
                         if (onSelectDB) {
                             onSelectDB(dbs[key])
                         }
