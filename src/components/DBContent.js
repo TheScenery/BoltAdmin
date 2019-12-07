@@ -44,7 +44,7 @@ const DBContent = (props) => {
         if (!loaded && dbName) {
             getKeys(dbName, []).then((result) => {
                 const dbData = _.get(result, 'data.result');
-                updateTreeData(dbData.map((d, index) => ({ title: d.value, key: index, isLeaf: !d.isBucket })))
+                updateTreeData(dbData.map((d, index) => ({ title: d.key, key: index, isLeaf: !d.isBucket })))
             }).catch((error) => {
                 console.log(error);
             }).finally(() => {
