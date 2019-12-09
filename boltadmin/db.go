@@ -13,9 +13,26 @@ type dbValue struct {
 }
 
 func getKeys(db *bolt.DB, keys []string) (interface{}, error) {
-	buckets := make([]dbValue, 0)
+	values := make([]dbValue, 0)
+	var err error
 	db.View(func(tx *bolt.Tx) error {
 		c := tx.Cursor()
+		if len(keys) > 0 {
+			b := tx.Bucket([]byte(keys[0]))
+			for i := 1; i < len(keys); i++ {
+				if b == nil {
+					err = fmt.Errorf("can not find bucket %s", keys)
+					return nil
+				}
+				key := keys[i]
+				b = b.Bucket([]byte(key))
+			}
+			if b == nil {
+				err = fmt.Errorf("can not find bucket %s", keys)
+				return nil
+			}
+			c = b.Cursor()
+		}
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			dbValueItem := dbValue{
@@ -25,10 +42,10 @@ func getKeys(db *bolt.DB, keys []string) (interface{}, error) {
 			if v != nil {
 				dbValueItem.Value = fmt.Sprintf("%s", v)
 			}
-			buckets = append(buckets, dbValueItem)
+			values = append(values, dbValueItem)
 		}
 
 		return nil
 	})
-	return buckets, nil
+	return values, err
 }
