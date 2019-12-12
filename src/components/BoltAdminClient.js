@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useHistory, useLocation } from "react-router-dom";
 import './BoltAdminClient.scss';
 import MenuPanel from './MenuPanel';
 import DBDetail from './DBDetail';
 
 const BoltAdminClient = () => {
-    const [selectedDB, selectDB] = useState('');
+    const history = useHistory();
+    const location = useLocation();
+    const pathName = location.pathname;
+    const dbName = pathName.substr(1);
     return (
         <div className="boltadmin-client-container">
-            <MenuPanel onSelectDB={selectDB} />
-            <DBDetail dbName={selectedDB} />
+            <MenuPanel dbName={dbName} onSelectDB={(db) => history.push(`/${db}`)} />
+            <DBDetail dbName={dbName} />
         </div>
     )
 }

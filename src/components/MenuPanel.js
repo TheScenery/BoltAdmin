@@ -6,7 +6,7 @@ import { getAllDB } from '../request/api.js'
 import './MenuPanel.scss';
 
 const MenuPanel = (props) => {
-    const { onSelectDB } = props;
+    const { dbName, onSelectDB } = props;
     const [loaded, updateLoadStatus] = useState(false);
     const [dbs = [], updateAddDBs] = useState([]);
 
@@ -18,7 +18,8 @@ const MenuPanel = (props) => {
             });
         }
     });
-
+    const selectedIndex = dbs.findIndex(db => db === dbName)
+    const selectedKeys = [selectedIndex];
     return (
         <div className="menu-panel-container">
             <Spin spinning={!loaded}>
@@ -30,6 +31,7 @@ const MenuPanel = (props) => {
                             onSelectDB(dbs[key])
                         }
                     }}
+                    selectedKeys={selectedKeys}
                 >
                     {dbs.map((db, index) => (
                         <Menu.Item key={index}>
@@ -44,6 +46,7 @@ const MenuPanel = (props) => {
 }
 
 MenuPanel.propTypes = {
+    dbName: PropTypes.string,
     onSelectDB: PropTypes.func,
 }
 

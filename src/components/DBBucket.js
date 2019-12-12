@@ -9,12 +9,11 @@ const { Panel } = Collapse;
 
 const DBBucket = (props) => {
     const { keys, dbName } = props;
-    const [loaded, updateLoadedStatus] = useState(false);
     const [buckets, setBuckets] = useState([]);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        if (!loaded && dbName) {
+        if (dbName) {
             getKeys(dbName, keys).then((result) => {
                 const dbData = _.get(result, 'data.result');
                 const buckets = [];
@@ -30,11 +29,10 @@ const DBBucket = (props) => {
                 setData(data);
             }).catch((error) => {
                 console.log(error);
-            }).finally(() => {
-                updateLoadedStatus(true);
             })
         }
-    })
+    // eslint-disable-next-line
+    }, [dbName])
 
     return (
         <div className='bucket-container'>
