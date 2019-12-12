@@ -19,7 +19,7 @@ const MenuPanel = (props) => {
         }
     });
     const selectedIndex = dbs.findIndex(db => db === dbName)
-    const selectedKeys = [selectedIndex];
+    const selectedKeys = [selectedIndex.toString()];
     return (
         <div className="menu-panel-container">
             <Spin spinning={!loaded}>
