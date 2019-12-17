@@ -16,7 +16,7 @@ const DBDataTable = (props) => {
             key: 'value',
         },
     ]
-    return <Table columns={columns} dataSource={data} size="small" />
+    return <Table columns={columns} dataSource={data} size="small" pagination={false} />
 
 }
 
