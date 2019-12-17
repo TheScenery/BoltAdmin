@@ -7,6 +7,10 @@ import DBDataTable from './DBDataTable.js';
 
 const { Panel } = Collapse;
 
+const updateValue = (dbName, parentKeys, key, value) => {
+    console.log('setKeys', dbName, [...parentKeys, key].join('.'), value)
+}
+
 const DBBucket = (props) => {
     const { keys, dbName } = props;
     const [buckets, setBuckets] = useState([]);
@@ -31,7 +35,7 @@ const DBBucket = (props) => {
                 console.log(error);
             })
         }
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [dbName])
 
     return (
@@ -47,7 +51,7 @@ const DBBucket = (props) => {
             </Collapse>}
             {data.length > 0 && (
                 <div className='bucket-data-container'>
-                    <DBDataTable data={data} />
+                    <DBDataTable data={data} onChange={(rowKey, colKey, value) => updateValue(dbName, keys, rowKey, value)} />
                 </div>
             )
             }

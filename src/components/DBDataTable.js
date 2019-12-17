@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
+import ValueEditor from './ValueEditor';
 
 const DBDataTable = (props) => {
-    const { data } = props;
+    const { data, onChange } = props;
     const columns = [
         {
             title: 'Key',
@@ -14,6 +15,7 @@ const DBDataTable = (props) => {
             title: 'Value',
             dataIndex: 'value',
             key: 'value',
+            render: (text, record) => <ValueEditor value={text} onChange={value => onChange(record.key, 'value', value)} />
         },
     ]
     return <Table columns={columns} dataSource={data} size="small" pagination={false} />
@@ -22,6 +24,7 @@ const DBDataTable = (props) => {
 
 DBDataTable.propTypes = {
     data: PropTypes.array,
+    onChange: PropTypes.func,
 }
 
 export default DBDataTable;
