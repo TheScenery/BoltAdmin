@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Collapse } from 'antd';
-import { getKey } from '../request/api.js';
+import { getKey, setKey } from '../request/api.js';
 import DBDataTable from './DBDataTable.js';
 
 const { Panel } = Collapse;
 
 const updateValue = (dbName, parentKeys, key, value) => {
-    console.log('setKeys', dbName, [...parentKeys, key].join('.'), value)
+    setKey(dbName, [...parentKeys, key], value).then((result) => {
+        console.log(result);
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 const DBBucket = (props) => {
