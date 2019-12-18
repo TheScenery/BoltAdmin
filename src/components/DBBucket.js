@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Collapse } from 'antd';
-import { getKeys } from '../request/api.js';
+import { getKey } from '../request/api.js';
 import DBDataTable from './DBDataTable.js';
 
 const { Panel } = Collapse;
@@ -18,7 +18,7 @@ const DBBucket = (props) => {
 
     useEffect(() => {
         if (dbName) {
-            getKeys(dbName, keys).then((result) => {
+            getKey(dbName, keys).then((result) => {
                 const dbData = _.get(result, 'data.result');
                 const buckets = [];
                 const data = [];

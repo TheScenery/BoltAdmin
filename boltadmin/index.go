@@ -17,7 +17,8 @@ func Start(dbManager DBManager) error {
 
 	api := router.Group("/api")
 	api.GET("/alldbs", wrapper.getAllDbs)
-	api.POST("/getKeys/:db", wrapper.getKeys)
+	api.POST("/getKey/:db", wrapper.getKey)
+	api.POST("/setKey/:db", wrapper.setKey)
 
 	router.Run(":10113") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	return nil
