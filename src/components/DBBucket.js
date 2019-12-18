@@ -15,6 +15,25 @@ const updateValue = (dbName, parentKeys, key, value) => {
     })
 }
 
+const loadKey = (dbName, keys, setBuckets, setData) => {
+    getKey(dbName, keys).then((result) => {
+        const dbData = _.get(result, 'data.result');
+        const buckets = [];
+        const data = [];
+        dbData.forEach((d) => {
+            if (d.isBucket) {
+                buckets.push(d);
+            } else {
+                data.push(d);
+            }
+        });
+        setBuckets(buckets);
+        setData(data);
+    }).catch((error) => {
+        console.log(error);
+    })
+}
+
 const DBBucket = (props) => {
     const { keys, dbName } = props;
     const [buckets, setBuckets] = useState([]);
@@ -22,22 +41,7 @@ const DBBucket = (props) => {
 
     useEffect(() => {
         if (dbName) {
-            getKey(dbName, keys).then((result) => {
-                const dbData = _.get(result, 'data.result');
-                const buckets = [];
-                const data = [];
-                dbData.forEach((d) => {
-                    if (d.isBucket) {
-                        buckets.push(d);
-                    } else {
-                        data.push(d);
-                    }
-                });
-                setBuckets(buckets);
-                setData(data);
-            }).catch((error) => {
-                console.log(error);
-            })
+            loadKey(dbName, keys, setBuckets, setData);
         }
         // eslint-disable-next-line
     }, [dbName])
@@ -55,10 +59,13 @@ const DBBucket = (props) => {
             </Collapse>}
             {data.length > 0 && (
                 <div className='bucket-data-container'>
-                    <DBDataTable data={data} onChange={(rowKey, colKey, value) => updateValue(dbName, keys, rowKey, value)} />
+                    <DBDataTable data={data} onChange={(rowKey, colKey, value) => updateValue(dbName, keys, rowKey, value)}
+                        onAdd={(key, value) => {
+                            updateValue(dbName, keys, key, value);
+                            loadKey(dbName, keys, setBuckets, setData);
+                        }} />
                 </div>
-            )
-            }
+            )}
         </div>
     )
 }
