@@ -86,3 +86,40 @@ func setKey(db *bolt.DB, keys []string, value string) (interface{}, error) {
 	})
 	return values, err
 }
+
+func deleteKey(db *bolt.DB, keys []string) (interface{}, error) {
+	values := make(map[string]interface{})
+	if len(keys) < 2 {
+		return nil, fmt.Errorf("delete key must have 2 keys at least")
+	}
+	var err error
+	db.Update(func(tx *bolt.Tx) error {
+		b, e := tx.CreateBucketIfNotExists([]byte(keys[0]))
+		if err != nil {
+			err = e
+			return nil
+		}
+		bucketLength := len(keys) - 1
+		valueKey := keys[bucketLength]
+		for i := 1; i < bucketLength; i++ {
+			key := keys[i]
+			b, e = b.CreateBucketIfNotExists([]byte(key))
+			if e != nil {
+				err = e
+				return nil
+			}
+		}
+		if b == nil {
+			err = fmt.Errorf("can not find bucket %s", keys)
+			return nil
+		}
+		value := b.Get([]byte(valueKey))
+		e = b.Delete([]byte(valueKey))
+		if err != nil {
+			err = e
+		}
+		values[valueKey] = string(value)
+		return nil
+	})
+	return values, err
+}
