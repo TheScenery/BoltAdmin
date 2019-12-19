@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Collapse } from 'antd';
+import { Collapse, Button, Modal, Input } from 'antd';
 import { getKey, setKey } from '../request/api.js';
 import DBDataTable from './DBDataTable.js';
 
@@ -46,6 +46,10 @@ const DBBucket = (props) => {
         // eslint-disable-next-line
     }, [dbName])
 
+    const [addRowVisible, setAddEditorVisible] = useState(false);
+    const [key, onKeyChange] = useState('');
+    const [value, onValueChange] = useState('');
+
     return (
         <div className='bucket-container'>
             {buckets.length > 0 && <Collapse>
@@ -61,11 +65,32 @@ const DBBucket = (props) => {
                 <div className='bucket-data-container'>
                     <DBDataTable data={data} onChange={(rowKey, colKey, value) => updateValue(dbName, keys, rowKey, value)}
                         onAdd={(key, value) => {
-                            updateValue(dbName, keys, key, value);
-                            loadKey(dbName, keys, setBuckets, setData);
+
                         }} />
                 </div>
             )}
+            {keys.length > 0 && <Button onClick={() => setAddEditorVisible(true)} type="primary" style={{ marginTop: 16 }}>
+                Add a row
+            </Button>}
+            <Modal
+                title="New Row Editor"
+                visible={addRowVisible}
+                onOk={() => {
+                    setAddEditorVisible(false);
+                    updateValue(dbName, keys, key, value);
+                    loadKey(dbName, keys, setBuckets, setData);
+                    onKeyChange('');
+                    onValueChange('');
+                }}
+                onCancel={() => setAddEditorVisible(false)}
+            >
+                <div style={{ marginBottom: 16 }}>
+                    <Input placeholder="Key" value={key} onChange={({ target }) => onKeyChange(target.value)} />
+                </div>
+                <div>
+                    <Input placeholder="Value" value={value} onChange={({ target }) => onValueChange(target.value)} />
+                </div>
+            </Modal>
         </div>
     )
 }
