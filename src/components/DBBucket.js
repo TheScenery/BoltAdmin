@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Collapse, Button, Modal, Input } from 'antd';
-import { getKey, setKey } from '../request/api.js';
+import { getKey, setKey, deleteKey } from '../request/api.js';
 import DBDataTable from './DBDataTable.js';
 
 const { Panel } = Collapse;
 
 const updateValue = (dbName, parentKeys, key, value) => {
     setKey(dbName, [...parentKeys, key], value).then((result) => {
+        console.log(result);
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
+const deleteValue = (dbName, parentKeys, key) => {
+    deleteKey(dbName, [...parentKeys, key]).then((result) => {
         console.log(result);
     }).catch(error => {
         console.log(error);
@@ -64,8 +72,9 @@ const DBBucket = (props) => {
             {data.length > 0 && (
                 <div className='bucket-data-container'>
                     <DBDataTable data={data} onChange={(rowKey, colKey, value) => updateValue(dbName, keys, rowKey, value)}
-                        onAdd={(key, value) => {
-
+                        onDelete={(key) => {
+                            deleteValue(dbName, keys, key);
+                            loadKey(dbName, keys, setBuckets, setData);
                         }} />
                 </div>
             )}
