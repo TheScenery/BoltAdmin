@@ -57,6 +57,8 @@ const DBBucket = (props) => {
     const [addRowVisible, setAddEditorVisible] = useState(false);
     const [key, onKeyChange] = useState('');
     const [value, onValueChange] = useState('');
+    const [addBucketVisible, setBucketEditorVisible] = useState(false);
+    const [bucketName, onBucketNameChange] = useState('');
 
     return (
         <div className='bucket-container'>
@@ -78,7 +80,10 @@ const DBBucket = (props) => {
                         }} />
                 </div>
             )}
-            {keys.length > 0 && <Button onClick={() => setAddEditorVisible(true)} type="primary" style={{ marginTop: 16 }}>
+            <Button onClick={() => setBucketEditorVisible(true)} type="primary" style={{ marginTop: 16, marginLeft: 16 }}>
+                Create Bucket
+            </Button>
+            {keys.length > 0 && <Button onClick={() => setAddEditorVisible(true)} type="primary" style={{ marginTop: 16, marginLeft: 16 }}>
                 Add a row
             </Button>}
             <Modal
@@ -98,6 +103,19 @@ const DBBucket = (props) => {
                 </div>
                 <div>
                     <Input placeholder="Value" value={value} onChange={({ target }) => onValueChange(target.value)} />
+                </div>
+            </Modal>
+            <Modal
+                title="New Bucket Editor"
+                visible={addBucketVisible}
+                onOk={() => {
+                    setBucketEditorVisible(false);
+                    onBucketNameChange('');
+                }}
+                onCancel={() => setBucketEditorVisible(false)}
+            >
+                <div style={{ marginBottom: 16 }}>
+                    <Input placeholder="BucketName" value={bucketName} onChange={({ target }) => onBucketNameChange(target.value)} />
                 </div>
             </Modal>
         </div>
