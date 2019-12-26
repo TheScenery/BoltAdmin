@@ -5,3 +5,6 @@
 A BoltDB Client.
 
 A BoltBD wrapper can easily intergrate in your service and manage your DB without stop you own service.
+
+![image](https://github.com/TheScenery/BoltAdmin/blob/raw/master/src/asserts/boltAdmin.png)
+
