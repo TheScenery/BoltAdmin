@@ -8,11 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
+    - uses: actions/setup-go@v1
+      with:
+        go-version: '1.13.5' 
     - name: Run yarn install
       run: yarn install
     - name: build frontend
       run: yarn build
-    - uses: cedrickring/golang-action@1.4.1
     - name: test show current dir
       run: pwd
+    - name: test show go path
+    run: echo $GOPATH
