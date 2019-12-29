@@ -19,4 +19,4 @@ jobs:
     - name: test show current dir
       run: pwd
     - name: test show go path
-    run: echo $GOPATH
+      run: echo $GOPATH
