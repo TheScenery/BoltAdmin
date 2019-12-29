@@ -59,6 +59,8 @@ const DBBucket = (props) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
+        setBuckets([]);
+        setData([]);
         if (dbName) {
             loadKey(dbName, keys, setBuckets, setData);
         }

@@ -7,7 +7,7 @@ const DBContent = (props) => {
     const { dbName } = props;
     return (
         <div className="db-content">
-            <DBBucket keys={[]} dbName={dbName} />
+            <DBBucket keys={[]} dbName={dbName} key={dbName}/>
         </div>
     )
 }
