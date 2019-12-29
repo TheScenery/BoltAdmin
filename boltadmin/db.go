@@ -123,3 +123,33 @@ func deleteKey(db *bolt.DB, keys []string) (interface{}, error) {
 	})
 	return values, err
 }
+
+func addBucket(db *bolt.DB, keys []string) (interface{}, error) {
+	var err error
+	var bucketName string
+	db.Update(func(tx *bolt.Tx) error {
+		b, e := tx.CreateBucketIfNotExists([]byte(keys[0]))
+		if err != nil {
+			err = e
+			return nil
+		}
+		bucketLength := len(keys)
+		for i := 1; i < bucketLength; i++ {
+			key := keys[i]
+			b, e = b.CreateBucketIfNotExists([]byte(key))
+			if e != nil {
+				err = e
+				return nil
+			}
+		}
+		if b == nil {
+			err = fmt.Errorf("can not create bucket %s", keys)
+			return nil
+		}
+
+		bucketName = keys[bucketLength-1]
+
+		return nil
+	})
+	return bucketName, err
+}

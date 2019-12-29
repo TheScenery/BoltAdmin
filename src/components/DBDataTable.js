@@ -23,7 +23,7 @@ const DBDataTable = (props) => {
             width: 100,
             render: (text, record) => (
                 <span>
-                    <a href onClick={() => onDelete(record.key)}>Delete</a>
+                    <a onClick={() => onDelete(record.key)}>Delete</a>
                 </span>
             ),
         },

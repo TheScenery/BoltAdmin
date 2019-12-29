@@ -20,7 +20,9 @@ func Start(dbManager DBManager) error {
 	api.POST("/getKey/:db", wrapper.getKey)
 	api.POST("/setKey/:db", wrapper.setKey)
 	api.POST("/deleteKey/:db", wrapper.deleteKey)
+	api.POST("/addBucket/:db", wrapper.addBucket)
+	api.POST("/deleteBucket/:db", wrapper.deleteKey)
 
-	router.Run(":10113") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	router.Run(":10113") // listen and serve on 0.0.0.0:10113 (for windows "localhost:10113")
 	return nil
 }

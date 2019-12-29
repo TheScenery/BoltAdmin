@@ -92,3 +92,27 @@ func (wrapper *handlerWrapper) deleteKey(c *gin.Context) {
 		})
 	}
 }
+
+func (wrapper *handlerWrapper) addBucket(c *gin.Context) {
+	var requestOptions requestData
+	if c.BindJSON(&requestOptions) == nil {
+		dbManager := wrapper.dbManager
+		dbName := c.Param("db")
+		db, err := dbManager.OpenDB(dbName)
+		defer dbManager.CloseDB(dbName, db)
+		if err != nil {
+			c.String(http.StatusBadRequest, "db name required")
+			return
+		}
+		result, err := addBucket(db, requestOptions.Keys)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err,
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"result": result,
+		})
+	}
+}

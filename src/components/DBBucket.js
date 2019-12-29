@@ -2,26 +2,10 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Collapse, Button, Modal, Input } from 'antd';
-import { getKey, setKey, deleteKey } from '../request/api.js';
+import { getKey, setKey, deleteKey, addBucket } from '../request/api.js';
 import DBDataTable from './DBDataTable.js';
 
 const { Panel } = Collapse;
-
-const updateValue = (dbName, parentKeys, key, value) => {
-    setKey(dbName, [...parentKeys, key], value).then((result) => {
-        console.log(result);
-    }).catch(error => {
-        console.log(error);
-    })
-}
-
-const deleteValue = (dbName, parentKeys, key) => {
-    deleteKey(dbName, [...parentKeys, key]).then((result) => {
-        console.log(result);
-    }).catch(error => {
-        console.log(error);
-    })
-}
 
 const loadKey = (dbName, keys, setBuckets, setData) => {
     getKey(dbName, keys).then((result) => {
@@ -38,6 +22,33 @@ const loadKey = (dbName, keys, setBuckets, setData) => {
         setBuckets(buckets);
         setData(data);
     }).catch((error) => {
+        console.log(error);
+    })
+}
+
+const updateValue = (dbName, parentKeys, key, value, setBuckets, setData) => {
+    setKey(dbName, [...parentKeys, key], value).then((result) => {
+        console.log(result);
+        loadKey(dbName, parentKeys, setBuckets, setData);
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
+const deleteValue = (dbName, parentKeys, key, setBuckets, setData) => {
+    deleteKey(dbName, [...parentKeys, key]).then((result) => {
+        console.log(result);
+        loadKey(dbName, parentKeys, setBuckets, setData);
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
+const createBucket = (dbName, parentKeys, key, setBuckets, setData) => {
+    addBucket(dbName, [...parentKeys, key]).then((result) => {
+        console.log(result);
+        loadKey(dbName, parentKeys, setBuckets, setData);
+    }).catch(error => {
         console.log(error);
     })
 }
@@ -73,10 +84,9 @@ const DBBucket = (props) => {
             </Collapse>}
             {data.length > 0 && (
                 <div className='bucket-data-container'>
-                    <DBDataTable data={data} onChange={(rowKey, colKey, value) => updateValue(dbName, keys, rowKey, value)}
+                    <DBDataTable data={data} onChange={(rowKey, colKey, value) => updateValue(dbName, keys, rowKey, value, setBuckets, setData)}
                         onDelete={(key) => {
-                            deleteValue(dbName, keys, key);
-                            loadKey(dbName, keys, setBuckets, setData);
+                            deleteValue(dbName, keys, key, setBuckets, setData);
                         }} />
                 </div>
             )}
@@ -91,8 +101,7 @@ const DBBucket = (props) => {
                 visible={addRowVisible}
                 onOk={() => {
                     setAddEditorVisible(false);
-                    updateValue(dbName, keys, key, value);
-                    loadKey(dbName, keys, setBuckets, setData);
+                    updateValue(dbName, keys, key, value, setBuckets, setData);
                     onKeyChange('');
                     onValueChange('');
                 }}
@@ -110,6 +119,7 @@ const DBBucket = (props) => {
                 visible={addBucketVisible}
                 onOk={() => {
                     setBucketEditorVisible(false);
+                    createBucket(dbName, keys, bucketName, setBuckets, setData);
                     onBucketNameChange('');
                 }}
                 onCancel={() => setBucketEditorVisible(false)}
