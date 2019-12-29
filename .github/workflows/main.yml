@@ -13,5 +13,6 @@ jobs:
       run: yarn install
     - name: build frontend
       run: yarn build
+    - uses: cedrickring/golang-action@1.4.1
     - name: test show current dir
       run: pwd
