@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Icon } from 'antd';
 import ValueEditor from './ValueEditor';
 
 const DBDataTable = (props) => {
@@ -23,7 +23,10 @@ const DBDataTable = (props) => {
             width: 100,
             render: (text, record) => (
                 <span>
-                    <a onClick={() => onDelete(record.key)}>Delete</a>
+                    <Icon
+                        type="delete"
+                        onClick={() => onDelete(record.key)}
+                    />
                 </span>
             ),
         },
