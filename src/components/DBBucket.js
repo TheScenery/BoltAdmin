@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Collapse, Button, Modal, Input } from 'antd';
-import { getKey, setKey, deleteKey, addBucket } from '../request/api.js';
+import { Collapse, Button, Modal, Input, Icon } from 'antd';
+import { getKey, setKey, deleteKey, addBucket, deleteBucket } from '../request/api.js';
 import DBDataTable from './DBDataTable.js';
+import './DBBucket.scss';
 
 const { Panel } = Collapse;
 
@@ -53,6 +54,15 @@ const createBucket = (dbName, parentKeys, key, setBuckets, setData) => {
     })
 }
 
+const removeBucket = (dbName, parentKeys, key, setBuckets, setData) => {
+    deleteBucket(dbName, [...parentKeys, key]).then((result) => {
+        console.log(result);
+        loadKey(dbName, parentKeys, setBuckets, setData);
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
 const DBBucket = (props) => {
     const { keys, dbName } = props;
     const [buckets, setBuckets] = useState([]);
@@ -75,10 +85,19 @@ const DBBucket = (props) => {
 
     return (
         <div className='bucket-container'>
-            {buckets.length > 0 && <Collapse>
+            {buckets.length > 0 && <Collapse bordered={false}>
                 {buckets.map((bucket) => {
                     return (
-                        <Panel header={bucket.key} key={bucket.key}>
+                        <Panel header={bucket.key} key={bucket.key} extra={(
+                            <Icon
+                                type="delete"
+                                onClick={event => {
+                                    // If you don't want click extra trigger collapse, you can prevent this:
+                                    event.stopPropagation();
+                                    removeBucket(dbName, keys, bucket.key, setBuckets, setData);
+                                }}
+                            />
+                        )}>
                             <DBBucket keys={[...keys, bucket.key]} dbName={dbName} />
                         </Panel>
                     )
