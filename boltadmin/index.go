@@ -15,7 +15,9 @@ func Start(dbManager DBManager) error {
 		})
 	})
 
-	router.Static("/", "./build")
+	router.Static("/static", "./static")
+	router.StaticFile("/", "./index.html")
+	router.StaticFile("/favicon.ico", "./favicon.ico")
 
 	api := router.Group("/api")
 	api.GET("/alldbs", wrapper.getAllDbs)
