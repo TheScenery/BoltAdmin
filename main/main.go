@@ -9,8 +9,6 @@ import (
 	"path/filepath"
 
 	bolt "go.etcd.io/bbolt"
-
-	"path"
 )
 
 type MyDBManager struct {
@@ -47,7 +45,7 @@ func getAllDbs(dir string) (*[]string, error) {
 }
 
 func main() {
-	defDataDir := path.Join("./", "/data")
+	defDataDir := "./data"
 	fmt.Println(defDataDir)
 	allDbs, err := getAllDbs(defDataDir)
 	if err != nil {
