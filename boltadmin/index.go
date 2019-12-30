@@ -15,6 +15,8 @@ func Start(dbManager DBManager) error {
 		})
 	})
 
+	router.Static("/", "./build")
+
 	api := router.Group("/api")
 	api.GET("/alldbs", wrapper.getAllDbs)
 	api.POST("/getKey/:db", wrapper.getKey)
