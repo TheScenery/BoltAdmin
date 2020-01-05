@@ -70,3 +70,6 @@ testProject/debug
 
 # db file
 testProject/data
+
+# build files 
+build

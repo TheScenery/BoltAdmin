@@ -16,8 +16,8 @@ func Start(dbManager DBManager) error {
 	})
 
 	router.Static("/static", "./static")
-	router.StaticFile("/", "./index.html")
 	router.StaticFile("/favicon.ico", "./favicon.ico")
+	router.StaticFile("/", "./index.html")
 
 	api := router.Group("/api")
 	api.GET("/alldbs", wrapper.getAllDbs)
@@ -26,6 +26,11 @@ func Start(dbManager DBManager) error {
 	api.POST("/deleteKey/:db", wrapper.deleteKey)
 	api.POST("/addBucket/:db", wrapper.addBucket)
 	api.POST("/deleteBucket/:db", wrapper.deleteBucket)
+
+	router.NoRoute(func(c *gin.Context) {
+		c.Request.URL.Path = "/"
+		router.HandleContext(c)
+	})
 
 	router.Run(":10113") // listen and serve on 0.0.0.0:10113 (for windows "localhost:10113")
 	return nil

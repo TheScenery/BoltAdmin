@@ -17,7 +17,7 @@ jobs:
     - name: build frontend
       run: yarn build
     - name: build backend
-      run: go build -o ./build/boltClient ./main/main.go
+      run: yarn build-backend
     - name: test show current dir
       run: pwd
     - name: test show go path
