@@ -53,7 +53,9 @@ func main() {
 	currentDir := path.Dir(filename)
 	defDataDir := path.Join(currentDir, "/data")
 	dataDir := flag.String("dataDir", defDataDir, "db files directory path")
-	fmt.Println(*dataDir)
+	flag.Parse()
+	baseDataDir := *dataDir
+	fmt.Println(baseDataDir)
 	allDbs, err := getAllDbs(*dataDir)
 	if err != nil {
 		fmt.Println(err)
@@ -61,7 +63,7 @@ func main() {
 	}
 
 	myDBManager := MyDBManager{
-		baseDataDir: defDataDir,
+		baseDataDir: baseDataDir,
 		allDBs:      *allDbs,
 	}
 	err = boltadmin.Start(myDBManager)
