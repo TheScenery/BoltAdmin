@@ -71,5 +71,8 @@ testProject/debug
 # db file
 testProject/data
 
-# build files 
+# build files
 build
+
+# idea setting file
+.idea
